@@ -4,31 +4,21 @@
  */
 package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  * @author Vespertino
  */
-public class FicheroAleatorio implements JugadorDAO {
-
-    private static final String FILE_PATH = "./Datos/jugadoresAleatorio.dat";
-    private List<Jugador> jugadores;
+public class FicheroAleatorio extends FicheroBase {
 
     public FicheroAleatorio() {
+        super("./Datos/jugadoresAleatorio.dat");
         crearArchivoSiNoExiste();
-        this.jugadores = cargarJugadores();
-
     }
 
     private void crearArchivoSiNoExiste() {
@@ -39,10 +29,10 @@ public class FicheroAleatorio implements JugadorDAO {
                 System.out.println("Directorio 'Datos' creado.");
             }
 
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile();
-                System.out.println("Archivo de jugadores creado: " + FILE_PATH);
+                System.out.println("Archivo de jugadores creado: " + filePath);
             }
         } catch (IOException e) {
             System.out.println("Error al crear el archivo: " + e.getMessage());
@@ -50,120 +40,86 @@ public class FicheroAleatorio implements JugadorDAO {
     }
 
     @Override
-    public void crearJugador(Jugador jugador) {
-        int nuevoId = generarNuevoId();
-
-        // Verificar duplicados
-        for (Jugador jugadorExistente : jugadores) {
-            if (jugadorExistente.getNick().equalsIgnoreCase(jugador.getNick())) {
-                System.out.println("Error: Ya existe un jugador con el nick '" + jugador.getNick() + "'");
-                return;
-            }
-        }
-
-        jugador.setId(nuevoId);
-        jugadores.add(jugador);
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public void eliminarJugador(int id) {
-        for(Jugador jugadorEliminar : jugadores){
-            if(jugadorEliminar.getId() == id){
-                jugadores.remove(jugadorEliminar);
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public void modificarJugador(int id, Jugador jugadorModificado) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                jugador.setNick(jugadorModificado.getNick());
-                jugador.setExperience(jugadorModificado.getExperience());
-                jugador.setLifeLevel(jugadorModificado.getLifeLevel());
-                jugador.setCoins(jugadorModificado.getCoins());
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public Jugador obtenerJugadorPorId(int id) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                // Encontramos al jugador
-                return jugador;
-            }
-        }
-        // No se encuentra
-        return null;
-    }
-
-    @Override
-    public List<Jugador> listarJugadores() {
-        return jugadores;
-    }
-
-    private List<Jugador> cargarJugadores() { // 46 bytes en total
+    protected List<Jugador> cargarJugadores() {
         List<Jugador> jugadoresCargados = new ArrayList<>();
-        char nick_name[] = new char[15], aux; //30
-        int posicion = 0, userId, coins, life_level, experience; // 16
-        try (RandomAccessFile file = new RandomAccessFile(FILE_PATH, "r")) {
-            for (;;) {
+        File archivo = new File(filePath); // Mismo FILE_PATH
+        char nick_name[] = new char[15], aux; // 30 bytes en total para el nick
+        int posicion = 4, coins, life_level, experience; // 16 bytes restantes
+
+        // Verifica si el archivo no existe
+        if (!archivo.exists()) {
+            System.out.println("El archivo no se ha encontrado.");
+            return jugadoresCargados; // Retornar lista vacía si no existe
+        }
+
+        // Verifica si el archivo está vacío
+        if (archivo.length() == 0) {
+            System.out.println("El archivo está vacío.");
+            return jugadoresCargados; // Retornar lista vacía si está vacío
+        }
+
+        // Si el archivo existe y no está vacío, proceder a leer
+        try (RandomAccessFile file = new RandomAccessFile(archivo, "r")) {
+            while (true) {
+                // Ubica el puntero del archivo en la posición actual
                 file.seek(posicion);
-            
+                
+                // Leer el nickname (15 caracteres, 30 bytes)
                 for (int i = 0; i < nick_name.length; i++) {
                     aux = file.readChar();
-                    nick_name[i] = aux; //los voy guardando en el array
+                    nick_name[i] = aux; // Guardar los caracteres en el array
                 }
-                String nick = Arrays.toString(nick_name);
+                String nick = new String(nick_name).trim(); // Convertir a String y quitar espacios en blanco
+
+                // Leer los otros valores del jugador (4 enteros, 16 bytes en total)
                 experience = file.readInt();
                 life_level = file.readInt();
                 coins = file.readInt();
+
+                // Crear un nuevo objeto Jugador y añadirlo a la lista
                 Jugador jugador = new Jugador(nick, experience, life_level, coins);
                 jugadoresCargados.add(jugador);
-                posicion = posicion + 46;
+
+                // Actualizar la posición para el siguiente jugador
+                posicion += 46; // 30 bytes (nick) + 16 bytes (otros valores)
+
+                // Verifica si se ha llegado al final del archivo
                 if (file.getFilePointer() == file.length()) {
-                    break;
+                    break; // Salir del bucle si se ha leído todo el archivo
                 }
             }
-            file.close();
         } catch (IOException e) {
-            System.out.println("No se encontró el archivo o hubo un error al cargar los jugadores.");
+            System.out.println("Error al cargar los jugadores: " + e.getMessage());
         }
 
         return jugadoresCargados;
     }
 
-    private void guardarJugadores(List<Jugador> jugadores) {
-    
-        try (RandomAccessFile jugadoresGuardados = new RandomAccessFile(FILE_PATH, "rw")) {
+    @Override
+    protected void guardarJugadores() {
+        try (RandomAccessFile jugadoresGuardados = new RandomAccessFile(filePath, "rw")) {
+            // Limpiar el archivo antes de escribir nuevos jugadores
+            jugadoresGuardados.setLength(0); // Limpia el contenido previo
+
             for (Jugador jugador : jugadores) {
                 jugadoresGuardados.writeInt(jugador.getId());
-                jugadoresGuardados.writeChars(jugador.getNick());
+
+                // Escribir el nickname (15 caracteres, rellenar si es necesario)
+                String nick = jugador.getNick();
+                StringBuilder sb = new StringBuilder(nick);
+                while (sb.length() < 15) {
+                    sb.append(" "); // Rellenar con espacios
+                }
+                jugadoresGuardados.writeChars(sb.toString()); // Guardar el nick en caracteres
+
+                // Escribir los otros valores del jugador
                 jugadoresGuardados.writeInt(jugador.getExperience());
                 jugadoresGuardados.writeInt(jugador.getLifeLevel());
                 jugadoresGuardados.writeInt(jugador.getCoins());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error al guardar los jugadores: " + e.getMessage());
         }
     }
 
-    private int generarNuevoId() {
-        int maxId = -1; // Inicializamos maxId a -1 (no hay jugadores)
-
-        // Iteramos sobre la lista de jugadores
-        for (Jugador jugador : jugadores) {
-            // Comparamos el ID de cada jugador con maxId
-            if (jugador.getId() > maxId) {
-                maxId = jugador.getId(); // Actualizamos maxId si encontramos un ID mayor
-            }
-        }
-
-        // Retornamos el siguiente ID (maxId + 1)
-        return maxId + 1;
-    }
 }

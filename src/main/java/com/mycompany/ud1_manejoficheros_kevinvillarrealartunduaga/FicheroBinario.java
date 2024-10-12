@@ -4,30 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FicheroBinario implements JugadorDAO {
+public class FicheroBinario extends FicheroBase{
 
-    private static final String FILE_PATH = "./Datos/jugadores.dat";
-    private List<Jugador> jugadores;
 
     public FicheroBinario() {
+        super("./Datos/jugadoresBinario.dat");
         crearArchivoSiNoExiste();
-        this.jugadores = cargarJugadores();
 
-    }
-
-    private int generarNuevoId() {
-        int maxId = -1; // Inicializamos maxId a -1 (no hay jugadores)
-
-        // Iteramos sobre la lista de jugadores
-        for (Jugador jugador : jugadores) {
-            // Comparamos el ID de cada jugador con maxId
-            if (jugador.getId() > maxId) {
-                maxId = jugador.getId(); // Actualizamos maxId si encontramos un ID mayor
-            }
-        }
-
-        // Retornamos el siguiente ID (maxId + 1)
-        return maxId + 1;
     }
 
     private void crearArchivoSiNoExiste() {
@@ -38,78 +21,24 @@ public class FicheroBinario implements JugadorDAO {
                 System.out.println("Directorio 'Datos' creado.");
             }
 
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile();
-                System.out.println("Archivo de jugadores creado: " + FILE_PATH);
+                System.out.println("Archivo de jugadores creado: " + filePath);
             }
         } catch (IOException e) {
             System.out.println("[Error] Error al crear el archivo: " + e.getMessage());
         }
     }
 
-    @Override
-    public void crearJugador(Jugador jugador) {
-        int nuevoId = generarNuevoId();
-
-        // Verificar duplicados
-        for (Jugador jugadorExistente : jugadores) {
-            if (jugadorExistente.getNick().equalsIgnoreCase(jugador.getNick())) {
-                System.out.println("Error: Ya existe un jugador con el nick '" + jugador.getNick() + "'");
-                return;
-            }
-        }
-
-        jugador.setId(nuevoId);
-        jugadores.add(jugador);
-        guardarJugadores(jugadores);
-    }
+   
 
     @Override
-    public void eliminarJugador(int id) {
-        for (Jugador jugadorEliminar : jugadores) {
-            if (jugadorEliminar.getId() == id) {
-                jugadores.remove(jugadorEliminar);
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public void modificarJugador(int id, Jugador jugadorModificado) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                jugador.setNick(jugadorModificado.getNick());
-                jugador.setExperience(jugadorModificado.getExperience());
-                jugador.setLifeLevel(jugadorModificado.getLifeLevel());
-                jugador.setCoins(jugadorModificado.getCoins());
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public Jugador obtenerJugadorPorId(int id) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                // Encontramos al jugador
-                return jugador;
-            }
-        }
-        // No se encuentra
-        return null;
-    }
-
-    @Override
-    public List<Jugador> listarJugadores() {
-        return jugadores;
-    }
-
-    private List<Jugador> cargarJugadores() {
+    protected List<Jugador> cargarJugadores() {
         List<Jugador> jugadoresCargados = new ArrayList<>();
         int coins, experience, life_level, id;
         String nick;
-        try (DataInputStream jugadoresCarga = new DataInputStream(new FileInputStream(FILE_PATH))) {
+        try (DataInputStream jugadoresCarga = new DataInputStream(new FileInputStream(filePath))) {
             while (true) {
                 id = jugadoresCarga.readInt();
                 nick = jugadoresCarga.readUTF();
@@ -127,14 +56,20 @@ public class FicheroBinario implements JugadorDAO {
         return jugadoresCargados;
     }
 
-    private void guardarJugadores(List<Jugador> jugadores) {
-        try (DataOutputStream jugadoresGuardados = new DataOutputStream(new FileOutputStream(FILE_PATH))) {
-            for (Jugador jugador : jugadores) {
-                jugadoresGuardados.writeBytes(jugador.toString());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+  protected void guardarJugadores() {
+    try (DataOutputStream jugadoresGuardados = new DataOutputStream(new FileOutputStream(filePath))) {
+        for (Jugador jugador : jugadores) {
+            jugadoresGuardados.writeInt(jugador.getId());
+            jugadoresGuardados.writeUTF(jugador.getNick());
+            jugadoresGuardados.writeInt(jugador.getExperience());
+            jugadoresGuardados.writeInt(jugador.getLifeLevel());
+            jugadoresGuardados.writeInt(jugador.getCoins());
         }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
 
 }

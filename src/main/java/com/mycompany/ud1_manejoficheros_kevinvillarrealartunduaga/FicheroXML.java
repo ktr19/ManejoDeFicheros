@@ -11,126 +11,57 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FicheroXML implements JugadorDAO {
-
-    private static final String FILE_PATH = "jugadores.xml";
-    private List<Jugador> jugadores;
+public class FicheroXML extends FicheroBase{ 
 
     public FicheroXML() {
+        super("./Datos/jugadoresXML.xml");
         crearArchivoSiNoExiste();
-        this.jugadores = cargarJugadores();
-
     }
-
-    private int generarNuevoId() {
-        int maxId = -1; // Inicializamos maxId a -1 (no hay jugadores)
-
-        // Iteramos sobre la lista de jugadores
-        for (Jugador jugador : jugadores) {
-            // Comparamos el ID de cada jugador con maxId
-            if (jugador.getId() > maxId) {
-                maxId = jugador.getId(); // Actualizamos maxId si encontramos un ID mayor
-            }
-        }
-
-        // Retornamos el siguiente ID (maxId + 1)
-        return maxId + 1;
-    }
-
+    
     private void crearArchivoSiNoExiste() {
         try {
+            // Crear el directorio Datos si no existe
             File dir = new File("./Datos");
             if (!dir.exists()) {
                 dir.mkdirs(); // Crear el directorio si no existe
                 System.out.println("Directorio 'Datos' creado.");
             }
 
-            File file = new File(dir + FILE_PATH);
+            // Crear el archivo XML dentro del directorio Datos
+            File file = new File(filePath); // Ajustar la ruta al archivo dentro del directorio
             if (!file.exists()) {
-                file.createNewFile();
-                System.out.println("Archivo de jugadores creado: " + FILE_PATH);
+                System.out.println("Archivo de jugadores no encontrado. Creando archivo...");
 
                 // Crear la estructura básica del XML
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.newDocument();
-                Element root = document.createElement("jugadores");
+                Element root = document.createElement("jugadores"); // Nodo raíz del XML
                 document.appendChild(root);
 
                 // Guardar la estructura inicial en el archivo
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // Formato con sangrías
                 DOMSource source = new DOMSource(document);
                 StreamResult result = new StreamResult(file);
                 transformer.transform(source, result);
+
+                System.out.println("Archivo XML creado en: " + file.getPath());
             }
+        } catch (ParserConfigurationException | TransformerException e) {
+            System.out.println("{Error} Error al crear la estructura XML: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("[Error] al crear el archivo: " + e.getMessage());
+            System.out.println("{Error} Error al crear el archivo: " + e.getMessage());
         }
     }
 
+    
     @Override
-    public void crearJugador(Jugador jugador) {
-        int nuevoId = generarNuevoId();
-
-        // Verificar duplicados
-        for (Jugador jugadorExistente : jugadores) {
-            if (jugadorExistente.getNick().equalsIgnoreCase(jugador.getNick())) {
-                System.out.println("[Error]: Ya existe un jugador con el nick '" + jugador.getNick() + "'");
-                return;
-            }
-        }
-
-        jugador.setId(nuevoId);
-        jugadores.add(jugador);
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public void eliminarJugador(int id) {
-        for (Jugador jugadorEliminar : jugadores) {
-            if (jugadorEliminar.getId() == id) {
-                jugadores.remove(jugadorEliminar);
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public void modificarJugador(int id, Jugador jugadorModificado) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                jugador.setNick(jugadorModificado.getNick());
-                jugador.setExperience(jugadorModificado.getExperience());
-                jugador.setLifeLevel(jugadorModificado.getLifeLevel());
-                jugador.setCoins(jugadorModificado.getCoins());
-            }
-        }
-        guardarJugadores(jugadores);
-    }
-
-    @Override
-    public Jugador obtenerJugadorPorId(int id) {
-        for (Jugador jugador : jugadores) {
-            if (jugador.getId() == id) {
-                // Encontramos al jugador
-                return jugador;
-            }
-        }
-        // No se encuentra
-        return null;
-    }
-
-    @Override
-    public List<Jugador> listarJugadores() {
-        return jugadores;
-    }
-
-    private List<Jugador> cargarJugadores() {
+    protected List<Jugador> cargarJugadores() {
         List<Jugador> jugadoresCargados = new ArrayList<>();
         try {
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
             if (!file.exists()) {
                 return jugadoresCargados; // Archivo no encontrado
             }
@@ -153,12 +84,13 @@ public class FicheroXML implements JugadorDAO {
                 }
             }
         } catch (Exception e) {
-            System.out.println("[Error]No se encontró el archivo o hubo un error al cargar los jugadores.");
+            System.out.println("{Error}No se encontró el archivo o hubo un error al cargar los jugadores.");
         }
         return jugadoresCargados;
     }
 
-    private void guardarJugadores(List<Jugador> jugadores) {
+    @Override
+    protected void guardarJugadores() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -199,7 +131,7 @@ public class FicheroXML implements JugadorDAO {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             Source source = new DOMSource(document);
 
-            StreamResult result = new StreamResult(new File(FILE_PATH));
+            StreamResult result = new StreamResult(new File(filePath));
             transformer.transform(source, result);
 
         } catch (Exception e) {
