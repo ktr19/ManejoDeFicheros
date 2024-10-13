@@ -6,20 +6,45 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase abstracta que implementa la interfaz JugadorDAO y gestiona la
+ * persistencia de los jugadores en un archivo. Proporciona métodos para
+ * crear, eliminar, modificar y listar jugadores, así como para cargar y
+ * guardar los datos en el almacenamiento correspondiente.
+ */
 public abstract class FicheroBase implements JugadorDAO {
     protected List<Jugador> jugadores = new ArrayList<>();
     protected String filePath;
 
+    /**
+     * Constructor de la clase FicheroBase.
+     *
+     * @param filePath Ruta del archivo donde se almacenarán los datos de los jugadores.
+     */
     public FicheroBase(String filePath) {
         this.filePath = filePath;
         this.jugadores = cargarJugadores();
     }
 
-    // Declarar los métodos abstractos para cargar y guardar jugadores
+    /**
+     * Método abstracto que carga los jugadores desde el almacenamiento.
+     *
+     * @return Lista de jugadores cargados.
+     */
     protected abstract List<Jugador> cargarJugadores();
+
+    /**
+     * Método abstracto que guarda los jugadores en el almacenamiento.
+     */
     protected abstract void guardarJugadores();
 
-       @Override
+    /**
+     * Crea un nuevo jugador y lo añade a la lista de jugadores.
+     * Valida los atributos del jugador antes de añadirlo.
+     *
+     * @param jugador Jugador a crear.
+     */
+    @Override
     public void crearJugador(Jugador jugador) {
         // Validar el nick antes de crear el jugador
         if (jugador.getNick() == null || jugador.getNick().isEmpty()) {
@@ -61,7 +86,11 @@ public abstract class FicheroBase implements JugadorDAO {
         guardarJugadores();
     }
 
-
+    /**
+     * Elimina un jugador de la lista de jugadores dado su ID.
+     *
+     * @param id ID del jugador a eliminar.
+     */
     @Override
     public void eliminarJugador(int id) {
         for (Jugador jugadorEliminar : jugadores) {
@@ -72,6 +101,12 @@ public abstract class FicheroBase implements JugadorDAO {
         guardarJugadores();
     }
 
+    /**
+     * Modifica los datos de un jugador existente.
+     *
+     * @param id ID del jugador a modificar.
+     * @param jugadorModificado Jugador con los nuevos datos.
+     */
     @Override
     public void modificarJugador(int id, Jugador jugadorModificado) {
         for (Jugador jugador : jugadores) {
@@ -86,6 +121,12 @@ public abstract class FicheroBase implements JugadorDAO {
         guardarJugadores();
     }
 
+    /**
+     * Obtiene un jugador a partir de su ID.
+     *
+     * @param id ID del jugador a obtener.
+     * @return Jugador correspondiente al ID o null si no se encuentra.
+     */
     @Override
     public Jugador obtenerJugadorPorId(int id) {
         for (Jugador jugador : jugadores) {
@@ -96,11 +137,21 @@ public abstract class FicheroBase implements JugadorDAO {
         return null;
     }
 
+    /**
+     * Lista todos los jugadores registrados.
+     *
+     * @return Lista de jugadores.
+     */
     @Override
     public List<Jugador> listarJugadores() {
         return jugadores;
     }
 
+    /**
+     * Genera un nuevo ID para un jugador basado en los IDs existentes.
+     *
+     * @return Un nuevo ID único para el jugador.
+     */
     private int generarNuevoId() {
         int maxId = -1; // Inicializamos maxId a -1 (no hay jugadores)
 
