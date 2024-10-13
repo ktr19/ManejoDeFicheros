@@ -186,6 +186,9 @@ public class Main {
             System.out.println("Operación de eliminación cancelada.");
             return; // Cancelar la operación
         }
+        if(jugadorTipo.obtenerJugadorPorId(idEliminar) == null){
+            System.out.println("No existe el jugador");
+        }
         if (idEliminar >= 0) {
             jugadorTipo.eliminarJugador(idEliminar);
         }
