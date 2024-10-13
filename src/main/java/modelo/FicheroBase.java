@@ -1,5 +1,7 @@
-package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
+package modelo;
 
+import modelo.Jugador;
+import modelo.JugadorDAO;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

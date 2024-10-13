@@ -1,5 +1,11 @@
-package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
+package ficheroConfi;
 
+import modelo.JugadorDAO;
+import tipoFicheros.FicheroAleatorio;
+import tipoFicheros.FicheroBinario;
+import tipoFicheros.FicheroObjeto;
+import tipoFicheros.FicheroTexto;
+import tipoFicheros.FicheroXML;
 import java.io.IOException;
 
 public class FicheroConfig {

@@ -1,4 +1,4 @@
-package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
+package modelo;
 
 import java.io.Serializable;
 

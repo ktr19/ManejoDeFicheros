@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jugadores>
+    <jugador>
+        <id>0</id>
+        <nick>kevin </nick>
+        <experience>12</experience>
+        <lifeLevel>32</lifeLevel>
+        <coins>543</coins>
+    </jugador>
+    <jugador>
+        <id>1</id>
+        <nick>ldld</nick>
+        <experience>534</experience>
+        <lifeLevel>534</lifeLevel>
+        <coins>54</coins>
+    </jugador>
+</jugadores>

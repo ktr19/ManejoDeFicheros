@@ -1,6 +1,7 @@
-package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
+package modelo;
 
 
+import modelo.Jugador;
 import java.util.List;
 
 public interface JugadorDAO{

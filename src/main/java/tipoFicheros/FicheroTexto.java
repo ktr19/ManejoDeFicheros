@@ -1,5 +1,7 @@
-package com.mycompany.ud1_manejoficheros_kevinvillarrealartunduaga;
+package tipoFicheros;
 
+import modelo.FicheroBase;
+import modelo.Jugador;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
