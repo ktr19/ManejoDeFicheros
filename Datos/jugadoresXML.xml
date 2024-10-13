@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jugadores>
+    <jugador>
+        <id>0</id>
+        <nick>jevin</nick>
+        <experience>543</experience>
+        <lifeLevel>657</lifeLevel>
+        <coins>543</coins>
+    </jugador>
+    <jugador>
+        <id>1</id>
+        <nick>lol</nick>
+        <experience>635</experience>
+        <lifeLevel>7654</lifeLevel>
+        <coins>432</coins>
+    </jugador>
+    <jugador>
+        <id>2</id>
+        <nick>grngs</nick>
+        <experience>654</experience>
+        <lifeLevel>765</lifeLevel>
+        <coins>543</coins>
+    </jugador>
+</jugadores>
