@@ -17,8 +17,10 @@ public class Main {
     /**
      * Método principal que inicia el programa.
      *
-     * @param args Argumentos de la línea de comandos (no utilizados en este programa).
-     * @throws IOException Si ocurre algún error relacionado con la entrada/salida de datos.
+     * @param args Argumentos de la línea de comandos (no utilizados en este
+     * programa).
+     * @throws IOException Si ocurre algún error relacionado con la
+     * entrada/salida de datos.
      */
     public static void main(String[] args) throws IOException {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -37,7 +39,8 @@ public class Main {
      * Solicita al usuario que elija el tipo de almacenamiento a utilizar.
      *
      * @param scanner Objeto Scanner para leer la entrada del usuario.
-     * @return El tipo de almacenamiento elegido por el usuario (texto, binario, etc.).
+     * @return El tipo de almacenamiento elegido por el usuario (texto, binario,
+     * etc.).
      */
     private static String elegirTipoAlmacenamiento(Scanner scanner) {
         String tipoFichero;
@@ -92,10 +95,12 @@ public class Main {
     }
 
     /**
-     * Procesa la opción seleccionada del menú y realiza la acción correspondiente.
+     * Procesa la opción seleccionada del menú y realiza la acción
+     * correspondiente.
      *
      * @param opcion Opción seleccionada por el usuario.
-     * @param jugadorTipo Implementación de JugadorDAO para realizar las operaciones de datos.
+     * @param jugadorTipo Implementación de JugadorDAO para realizar las
+     * operaciones de datos.
      * @param scanner Scanner para obtener entradas adicionales del usuario.
      */
     private static void procesarOpcion(int opcion, JugadorDAO jugadorTipo, Scanner scanner) {
@@ -125,7 +130,8 @@ public class Main {
     }
 
     /**
-     * Solicita los datos de un nuevo jugador al usuario y lo añade a la base de datos.
+     * Solicita los datos de un nuevo jugador al usuario y lo añade a la base de
+     * datos.
      *
      * @param jugadorTipo Implementación de JugadorDAO para gestionar jugadores.
      * @param scanner Scanner para la entrada del usuario.
@@ -177,7 +183,8 @@ public class Main {
     /**
      * Solicita el ID de un jugador al usuario y lo elimina del sistema.
      *
-     * @param jugadorTipo Implementación de JugadorDAO utilizada para gestionar jugadores.
+     * @param jugadorTipo Implementación de JugadorDAO utilizada para gestionar
+     * jugadores.
      * @param scanner Scanner para la entrada del usuario.
      */
     private static void eliminarJugador(JugadorDAO jugadorTipo, Scanner scanner) {
@@ -186,7 +193,7 @@ public class Main {
             System.out.println("Operación de eliminación cancelada.");
             return; // Cancelar la operación
         }
-        if(jugadorTipo.obtenerJugadorPorId(idEliminar) == null){
+        if (jugadorTipo.obtenerJugadorPorId(idEliminar) == null) {
             System.out.println("No existe el jugador");
         }
         if (idEliminar >= 0) {
@@ -195,9 +202,11 @@ public class Main {
     }
 
     /**
-     * Modifica los datos de un jugador existente según los valores proporcionados por el usuario.
+     * Modifica los datos de un jugador existente según los valores
+     * proporcionados por el usuario.
      *
-     * @param jugadorTipo Implementación de JugadorDAO para realizar las modificaciones.
+     * @param jugadorTipo Implementación de JugadorDAO para realizar las
+     * modificaciones.
      * @param scanner Scanner para la entrada del usuario.
      */
     private static void modificarJugador(JugadorDAO jugadorTipo, Scanner scanner) {
@@ -208,24 +217,26 @@ public class Main {
         // Validación del ID
         while (true) {
             System.out.print("ID del jugador a modificar (o ingresa -1 para cancelar): ");
-            id = scanner.nextInt();
-            scanner.nextLine();  // Limpiar el buffer
+            try {
+                id = Integer.parseInt(scanner.nextLine()); // Leer y convertir a entero
+                if (id < -1) {
+                    System.out.println("ID no puede ser negativo.");
+                    continue; // Volver a solicitar el ID
+                }
 
-            if (id < -1) {
-                System.out.println("ID no puede ser negativo.");
-                continue; // Volver a solicitar el ID
-            }
+                if (id == -1) {
+                    System.out.println("Operación de modificación cancelada.");
+                    return; // Cancelar la operación
+                }
 
-            if (id == -1) {
-                System.out.println("Operación de modificación cancelada.");
-                return; // Cancelar la operación
-            }
-
-            Jugador jugadorExistente = jugadorTipo.obtenerJugadorPorId(id);
-            if (jugadorExistente == null) {
-                System.out.println("No existe un jugador con ese ID. Inténtalo de nuevo.");
-            } else {
-                break; // ID válido y el jugador existe
+                Jugador jugadorExistente = jugadorTipo.obtenerJugadorPorId(id);
+                if (jugadorExistente == null) {
+                    System.out.println("No existe un jugador con ese ID. Inténtalo de nuevo.");
+                } else {
+                    break; // ID válido y el jugador existe
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Debes ingresar un número entero."); // Manejar entrada no numérica
             }
         }
 
@@ -292,7 +303,8 @@ public class Main {
     /**
      * Muestra una lista completa de todos los jugadores almacenados.
      *
-     * @param jugadorTipo Implementación de JugadorDAO para gestionar los jugadores.
+     * @param jugadorTipo Implementación de JugadorDAO para gestionar los
+     * jugadores.
      */
     private static void listarJugadores(JugadorDAO jugadorTipo) {
         List<Jugador> jugadores = jugadorTipo.listarJugadores();
