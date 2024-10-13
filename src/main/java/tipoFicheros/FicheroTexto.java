@@ -6,27 +6,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Clase que maneja la lectura y escritura de jugadores en un archivo de texto.
- * Extiende la clase {@link FicheroBase} para proporcionar funcionalidad
- * específica para archivos de texto. Los jugadores se almacenan en un formato
- * legible por humanos.
- */
-public class FicheroTexto extends FicheroBase {
+public class FicheroTexto extends FicheroBase{
 
-    /**
-     * Constructor de la clase FicheroTexto. Inicializa la ruta del archivo de
-     * jugadores y crea el archivo si no existe.
-     */
+
     public FicheroTexto() {
         super("./Datos/jugadores.txt");
         crearArchivoSiNoExiste();
     }
-
-    /**
-     * Crea el directorio y el archivo si no existen. Se asegura de que la
-     * estructura de directorios esté disponible para almacenar los datos.
-     */
+    
     private void crearArchivoSiNoExiste() {
         try {
             File dir = new File("./Datos");
@@ -38,52 +25,43 @@ public class FicheroTexto extends FicheroBase {
             File file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile();
-                System.out.println("Archivo de jugadores creado: " + filePath);
+                System.out.println("\nArchivo de jugadores creado: " + filePath+"\n");
             }
         } catch (IOException e) {
-            System.out.println("{Error} Error al crear el archivo: " + e.getMessage());
+            System.out.println("\n{Error} Error al crear el archivo: " + e.getMessage()+"\n");
         }
     }
 
-    /**
-     * Carga la lista de jugadores desde el archivo de texto. Cada línea del
-     * archivo debe contener la información del jugador en el formato
-     * especificado.
-     *
-     * @return Una lista de objetos {@link Jugador} cargados desde el archivo.
-     */
+
+    // Cargar jugadores desde el archivo al iniciar
     @Override
-    protected List<Jugador> cargarJugadores() {
-        List<Jugador> jugadoresCargados = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                // Procesar la línea usando split y asignar directamente
-                String[] partes = linea.split(", ");
-                int id = Integer.parseInt(partes[0].split(" = ")[1]);
-                String nick = partes[1].split(" = ")[1];
-                int experience = Integer.parseInt(partes[2].split(" = ")[1]);
-                int lifeLevel = Integer.parseInt(partes[3].split(" = ")[1]);
-                int coins = Integer.parseInt(partes[4].split(" = ")[1]);
-
-                // Crear el objeto Jugador y añadirlo a la lista
-                jugadoresCargados.add(new Jugador(id, nick, experience, lifeLevel, coins));
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("{Error} No se encontró el archivo: " + filePath);
-        } catch (IOException e) {
-            System.out.println("{Error} Hubo un problema al cargar los jugadores: " + e.getMessage());
+   protected List<Jugador> cargarJugadores() {
+    List<Jugador> jugadoresCargados = new ArrayList<>();
+    
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String linea;
+        while ((linea = reader.readLine()) != null) {
+            String[] partes = linea.replaceAll("[\\[\\]]", "").split(", ");
+            int id = Integer.parseInt(partes[0].split(" = ")[1]);
+            String nick = partes[1].split(" = ")[1];
+            int experience = Integer.parseInt(partes[2].split(" = ")[1]);
+            int lifeLevel = Integer.parseInt(partes[3].split(" = ")[1]);
+            int coins = Integer.parseInt(partes[4].split(" = ")[1]);
+            jugadoresCargados.add(new Jugador(id, nick, experience, lifeLevel, coins));
         }
-
-        return jugadoresCargados;
+    } catch (FileNotFoundException e) {
+        // Error específico cuando el archivo no existe
+        System.out.println("\n{Error} No se encontró el archivo: " + filePath+"\n");
+    } catch (IOException e) {
+        // Error al intentar cargar o leer el archivo
+        System.out.println("\n{Error} Hubo un problema al cargar los jugadores: " + e.getMessage()+"\n");
     }
+    
+    return jugadoresCargados;
+}
 
-    /**
-     * Guarda la lista de jugadores en el archivo de texto. Escribe cada jugador
-     * en una nueva línea utilizando el formato definido en el método
-     * {@link Jugador#toString()}.
-     */
+
+    // Guardar la lista completa de jugadores en el archivo (usado en eliminar y modificar)
     protected void guardarJugadores() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Jugador jugador : jugadores) {

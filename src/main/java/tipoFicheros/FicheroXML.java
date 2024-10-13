@@ -41,13 +41,13 @@ public class FicheroXML extends FicheroBase {
             File dir = new File("./Datos");
             if (!dir.exists()) {
                 dir.mkdirs(); // Crear el directorio si no existe
-                System.out.println("Directorio 'Datos' creado.");
+                System.out.println("\nDirectorio 'Datos' creado.\n");
             }
 
             // Crear el archivo XML dentro del directorio Datos
             File file = new File(filePath); // Ajustar la ruta al archivo dentro del directorio
             if (!file.exists()) {
-                System.out.println("Archivo de jugadores no encontrado. Creando archivo...");
+                System.out.println("\nArchivo de jugadores no encontrado. Creando archivo...\n");
 
                 // Crear la estructura básica del XML
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -64,12 +64,12 @@ public class FicheroXML extends FicheroBase {
                 StreamResult result = new StreamResult(file);
                 transformer.transform(source, result);
 
-                System.out.println("Archivo XML creado en: " + file.getPath());
+                System.out.println("\nArchivo XML creado en: " + file.getPath()+"\n");
             }
         } catch (ParserConfigurationException | TransformerException e) {
-            System.out.println("{Error} Error al crear la estructura XML: " + e.getMessage());
+            System.out.println("\n{Error} Error al crear la estructura XML: " + e.getMessage()+"\n");
         } catch (Exception e) {
-            System.out.println("{Error} Error al crear el archivo: " + e.getMessage());
+            System.out.println("\n{Error} Error al crear el archivo: " + e.getMessage()+"\n");
         }
     }
 
@@ -106,7 +106,7 @@ public class FicheroXML extends FicheroBase {
                 }
             }
         } catch (Exception e) {
-            System.out.println("{Error} No se encontró el archivo o hubo un error al cargar los jugadores.");
+            System.out.println("\n{Error} No se encontró el archivo o hubo un error al cargar los jugadores.+\n");
         }
         return jugadoresCargados;
     }

@@ -1,2 +1,0 @@
-[ID = 1, Nick = gk, Experience = 54, Life Level = 54, Coins = 3]
-[ID = 2, Nick = keivnwfaksdgf, Experience = 4, Life Level = 3, Coins = 3]

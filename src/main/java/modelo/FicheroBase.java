@@ -8,18 +8,20 @@ import java.util.List;
 
 /**
  * Clase abstracta que implementa la interfaz JugadorDAO y gestiona la
- * persistencia de los jugadores en un archivo. Proporciona métodos para
- * crear, eliminar, modificar y listar jugadores, así como para cargar y
- * guardar los datos en el almacenamiento correspondiente.
+ * persistencia de los jugadores en un archivo. Proporciona métodos para crear,
+ * eliminar, modificar y listar jugadores, así como para cargar y guardar los
+ * datos en el almacenamiento correspondiente.
  */
 public abstract class FicheroBase implements JugadorDAO {
+
     protected List<Jugador> jugadores = new ArrayList<>();
     protected String filePath;
 
     /**
      * Constructor de la clase FicheroBase.
      *
-     * @param filePath Ruta del archivo donde se almacenarán los datos de los jugadores.
+     * @param filePath Ruta del archivo donde se almacenarán los datos de los
+     * jugadores.
      */
     public FicheroBase(String filePath) {
         this.filePath = filePath;
@@ -39,8 +41,8 @@ public abstract class FicheroBase implements JugadorDAO {
     protected abstract void guardarJugadores();
 
     /**
-     * Crea un nuevo jugador y lo añade a la lista de jugadores.
-     * Valida los atributos del jugador antes de añadirlo.
+     * Crea un nuevo jugador y lo añade a la lista de jugadores. Valida los
+     * atributos del jugador antes de añadirlo.
      *
      * @param jugador Jugador a crear.
      */
@@ -51,7 +53,7 @@ public abstract class FicheroBase implements JugadorDAO {
             System.out.println("[Error]: El nick debe contener al menos un carácter.");
             return;
         }
-        
+
         if (jugador.getNick().length() > 15) {
             System.out.println("[Error]: El nick no puede superar los 15 caracteres.");
             return;
@@ -83,7 +85,11 @@ public abstract class FicheroBase implements JugadorDAO {
 
         jugador.setId(nuevoId);
         jugadores.add(jugador);
+
         guardarJugadores();
+        System.out.println("");
+        System.out.println("Jugador creado con exito");
+        System.out.println("");
     }
 
     /**
@@ -96,6 +102,10 @@ public abstract class FicheroBase implements JugadorDAO {
         for (Jugador jugadorEliminar : jugadores) {
             if (jugadorEliminar.getId() == id) {
                 jugadores.remove(jugadorEliminar);
+                System.out.println("");
+                System.out.println("Jugador eliminado con exito");
+                System.out.println("");
+                break;
             }
         }
         guardarJugadores();
@@ -115,10 +125,14 @@ public abstract class FicheroBase implements JugadorDAO {
                 jugador.setExperience(jugadorModificado.getExperience());
                 jugador.setLifeLevel(jugadorModificado.getLifeLevel());
                 jugador.setCoins(jugadorModificado.getCoins());
+                System.out.println("");
+                System.out.println("Jugador modificado con exito");
+                System.out.println("");
                 break;
             }
         }
         guardarJugadores();
+
     }
 
     /**

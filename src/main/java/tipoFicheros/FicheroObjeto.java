@@ -28,16 +28,16 @@ public class FicheroObjeto extends FicheroBase {
             File dir = new File("./Datos");
             if (!dir.exists()) {
                 boolean dirCreado = dir.mkdirs(); // Crea el directorio 'Datos' si no existe
-                System.out.println("Directorio 'Datos' creado: " + dirCreado);
+                System.out.println("\nDirectorio 'Datos' creado: " + dirCreado+"\n");
             }
 
             File file = new File(filePath);
             if (!file.exists()) {
                 boolean archivoCreado = file.createNewFile(); // Crea el archivo de jugadores
-                System.out.println("Archivo de jugadores creado: " + archivoCreado + " en " + filePath);
+                System.out.println("\nArchivo de jugadores creado: " + archivoCreado + " en " + filePath+"\n");
             }
         } catch (IOException e) {
-            System.out.println("[Error] Error al crear el archivo: " + e.getMessage());
+            System.out.println("\n[Error] Error al crear el archivo: " + e.getMessage()+"\n");
         }
     }
 
@@ -49,13 +49,13 @@ public class FicheroObjeto extends FicheroBase {
 
         // Verifica si el archivo existe
         if (!file.exists()) {
-            System.out.println("El archivo no existe, no se cargarán jugadores.");
+            System.out.println("\nEl archivo no existe, no se cargarán jugadores.+\n");
             return jugadoresCargados; // Retorna una lista vacía si el archivo no existe
         }
 
         // Verifica si el archivo está vacío
         if (file.length() == 0) {
-            System.out.println("El archivo está vacío, no se cargarán jugadores.");
+            System.out.println("\nEl archivo está vacío, no se cargarán jugadores.\n");
             return jugadoresCargados; // Retorna una lista vacía si el archivo está vacío
         }
 
@@ -71,7 +71,7 @@ public class FicheroObjeto extends FicheroBase {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error al cargar los jugadores: " + e.getMessage());
+            System.out.println("\nError al cargar los jugadores: " + e.getMessage()+"\n");
         }
 
         return jugadoresCargados; // Retorna la lista de jugadores cargados

@@ -3,12 +3,14 @@ package run;
 import modelo.JugadorDAO;
 import modelo.Jugador;
 import ficheroConfi.FicheroConfig;
+import static ficheroConfi.FicheroConfig.obtenerServicio;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 /**
- * Clase principal que se encarga de ejecutar el programa para gestionar jugadores.
+ * Clase principal que se encarga de ejecutar el programa para gestionar
+ * jugadores.
  */
 public class Main {
 
@@ -21,7 +23,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         try (Scanner scanner = new Scanner(System.in)) {
             String tipoFichero = elegirTipoAlmacenamiento(scanner);
-            JugadorDAO jugadorTipo = FicheroConfig.obtenerServicio(tipoFichero);
+            JugadorDAO jugadorTipo = obtenerServicio(tipoFichero);
 
             int opcion;
             do {
@@ -134,8 +136,12 @@ public class Main {
 
         // Validación del Nick
         while (true) {
-            System.out.print("Nick: ");
+            System.out.print("Nick (o ingresa -1 para cancelar): ");
             nick = scanner.nextLine();
+            if (nick.equals("-1")) {
+                System.out.println("Operación de alta cancelada.");
+                return; // Cancelar la operación
+            }
             if (nick.length() >= 1 && nick.length() <= 15) {
                 break;
             } else {
@@ -144,20 +150,28 @@ public class Main {
         }
 
         // Validación de la experiencia
-        experience = obtenerEntradaEntera(scanner, "Experiencia: ");
-        if (experience < 0) return;
+        experience = obtenerEntradaEntera(scanner, "Experiencia (o ingresa -1 para cancelar): ");
+        if (experience == -1) {
+            System.out.println("Operación de alta cancelada.");
+            return; // Cancelar la operación
+        }
 
         // Validación del nivel de vida
-        lifeLevel = obtenerEntradaEntera(scanner, "Nivel de vida: ");
-        if (lifeLevel < 0) return;
+        lifeLevel = obtenerEntradaEntera(scanner, "Nivel de vida (o ingresa -1 para cancelar): ");
+        if (lifeLevel == -1) {
+            System.out.println("Operación de alta cancelada.");
+            return; // Cancelar la operación
+        }
 
         // Validación de las monedas
-        coins = obtenerEntradaEntera(scanner, "Monedas: ");
-        if (coins < 0) return;
+        coins = obtenerEntradaEntera(scanner, "Monedas (o ingresa -1 para cancelar): ");
+        if (coins == -1) {
+            System.out.println("Operación de alta cancelada.");
+            return; // Cancelar la operación
+        }
 
         Jugador nuevoJugador = new Jugador(nick, experience, lifeLevel, coins);
         jugadorTipo.crearJugador(nuevoJugador);
-        System.out.println("Jugador creado exitosamente.");
     }
 
     /**
@@ -167,10 +181,13 @@ public class Main {
      * @param scanner Scanner para la entrada del usuario.
      */
     private static void eliminarJugador(JugadorDAO jugadorTipo, Scanner scanner) {
-        int idEliminar = obtenerEntradaEntera(scanner, "ID del jugador a eliminar: ");
+        int idEliminar = obtenerEntradaEntera(scanner, "ID del jugador a eliminar (o ingresa -1 para cancelar): ");
+        if (idEliminar == -1) {
+            System.out.println("Operación de eliminación cancelada.");
+            return; // Cancelar la operación
+        }
         if (idEliminar >= 0) {
             jugadorTipo.eliminarJugador(idEliminar);
-            System.out.println("Jugador eliminado exitosamente.");
         }
     }
 
@@ -187,20 +204,36 @@ public class Main {
 
         // Validación del ID
         while (true) {
-            System.out.print("ID del jugador a modificar: ");
+            System.out.print("ID del jugador a modificar (o ingresa -1 para cancelar): ");
             id = scanner.nextInt();
             scanner.nextLine();  // Limpiar el buffer
-            if (id >= 0) {
-                break;
-            } else {
+
+            if (id < -1) {
                 System.out.println("ID no puede ser negativo.");
+                continue; // Volver a solicitar el ID
+            }
+
+            if (id == -1) {
+                System.out.println("Operación de modificación cancelada.");
+                return; // Cancelar la operación
+            }
+
+            Jugador jugadorExistente = jugadorTipo.obtenerJugadorPorId(id);
+            if (jugadorExistente == null) {
+                System.out.println("No existe un jugador con ese ID. Inténtalo de nuevo.");
+            } else {
+                break; // ID válido y el jugador existe
             }
         }
 
         // Validación del Nick
         while (true) {
-            System.out.print("Nuevo Nick: ");
+            System.out.print("Nuevo Nick (o ingresa -1 para cancelar): ");
             nuevoNick = scanner.nextLine();
+            if (nuevoNick.equals("-1")) {
+                System.out.println("Operación de modificación cancelada.");
+                return; // Cancelar la operación
+            }
             if (nuevoNick.length() >= 1 && nuevoNick.length() <= 15) {
                 break;
             } else {
@@ -209,30 +242,44 @@ public class Main {
         }
 
         // Validación de la nueva experiencia
-        nuevaExperiencia = obtenerEntradaEntera(scanner, "Nueva experiencia: ");
-        if (nuevaExperiencia < 0) return;
+        nuevaExperiencia = obtenerEntradaEntera(scanner, "Nueva experiencia (o ingresa -1 para cancelar): ");
+        if (nuevaExperiencia == -1) {
+            System.out.println("Operación de modificación cancelada.");
+            return; // Cancelar la operación
+        }
 
         // Validación del nuevo nivel de vida
-        nuevoLifeLevel = obtenerEntradaEntera(scanner, "Nuevo nivel de vida: ");
-        if (nuevoLifeLevel < 0) return;
+        nuevoLifeLevel = obtenerEntradaEntera(scanner, "Nuevo nivel de vida (o ingresa -1 para cancelar): ");
+        if (nuevoLifeLevel == -1) {
+            System.out.println("Operación de modificación cancelada.");
+            return; // Cancelar la operación
+        }
 
         // Validación de las nuevas monedas
-        nuevasMonedas = obtenerEntradaEntera(scanner, "Nuevas monedas: ");
-        if (nuevasMonedas < 0) return;
+        nuevasMonedas = obtenerEntradaEntera(scanner, "Nuevas monedas (o ingresa -1 para cancelar): ");
+        if (nuevasMonedas == -1) {
+            System.out.println("Operación de modificación cancelada.");
+            return; // Cancelar la operación
+        }
 
         Jugador jugadorModificado = new Jugador(nuevoNick, nuevaExperiencia, nuevoLifeLevel, nuevasMonedas);
         jugadorTipo.modificarJugador(id, jugadorModificado);
-        System.out.println("Jugador modificado exitosamente.");
     }
 
     /**
      * Muestra la información de un jugador específico basándose en su ID.
      *
-     * @param jugadorTipo Implementación de JugadorDAO para obtener los datos del jugador.
+     * @param jugadorTipo Implementación de JugadorDAO para obtener los datos
+     * del jugador.
      * @param scanner Scanner para la entrada del usuario.
      */
     private static void listarJugadorPorId(JugadorDAO jugadorTipo, Scanner scanner) {
-        int id = obtenerEntradaEntera(scanner, "ID del jugador: ");
+        int id = obtenerEntradaEntera(scanner, "ID del jugador (o ingresa -1 para cancelar): ");
+        if (id == -1) {
+            System.out.println("Operación de consulta cancelada.");
+            return; // Cancelar la operación
+        }
+
         if (id >= 0) {
             Jugador jugador = jugadorTipo.obtenerJugadorPorId(id);
             System.out.println(jugador != null ? jugador : "Jugador no encontrado.");
@@ -256,13 +303,6 @@ public class Main {
         }
     }
 
-    /**
-     * Solicita al usuario un número entero válido para un campo específico.
-     *
-     * @param scanner Scanner para capturar la entrada del usuario.
-     * @param mensaje Mensaje que se mostrará al usuario.
-     * @return El valor entero ingresado por el usuario.
-     */
     private static int obtenerEntradaEntera(Scanner scanner, String mensaje) {
         int valor;
         while (true) {
@@ -272,7 +312,7 @@ public class Main {
                 scanner.nextLine(); // Limpiar el buffer
 
                 // Verificar que el valor no sea negativo
-                if (valor < 0) {
+                if (valor < -1) { // Permitir -1 para cancelar
                     System.out.println("Error: El valor no puede ser negativo. Inténtalo de nuevo.");
                     continue;
                 }

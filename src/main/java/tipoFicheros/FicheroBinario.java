@@ -25,16 +25,17 @@ public class FicheroBinario extends FicheroBase {
             File dir = new File("./Datos");
             if (!dir.exists()) {
                 dir.mkdirs(); // Crea el directorio 'Datos' si no existe
-                System.out.println("Directorio 'Datos' creado.");
+                
+                System.out.println("\nDirectorio 'Datos' creado.\n");
             }
 
             File file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile(); // Crea el archivo de jugadores
-                System.out.println("Archivo de jugadores creado: " + filePath);
+                System.out.println("\nArchivo de jugadores creado: " + filePath+"\n");
             }
         } catch (IOException e) {
-            System.out.println("[Error] Error al crear el archivo: " + e.getMessage());
+            System.out.println("\n[Error] Error al crear el archivo: " + e.getMessage()+"\n");
         }
     }
 
@@ -61,7 +62,7 @@ public class FicheroBinario extends FicheroBase {
         } catch (EOFException e) {
             // Fin del archivo alcanzado, no es un error, se puede ignorar
         } catch (IOException e) {
-            System.out.println("No se encontró el archivo o hubo un error al cargar los jugadores.");
+            System.out.println("\nNo se encontró el archivo o hubo un error al cargar los jugadores.\n");
         }
 
         return jugadoresCargados; // Retorna la lista de jugadores cargados

@@ -28,16 +28,16 @@ public class FicheroAleatorio extends FicheroBase {
             File dir = new File("./Datos");
             if (!dir.exists()) {
                 dir.mkdirs(); // Crea el directorio 'Datos' si no existe
-                System.out.println("Directorio 'Datos' creado.");
+                System.out.println("\nDirectorio 'Datos' creado.\n");
             }
 
             File file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile(); // Crea el archivo de jugadores
-                System.out.println("Archivo de jugadores creado: " + filePath);
+                System.out.println("\nArchivo de jugadores creado: " + filePath+"\n");
             }
         } catch (IOException e) {
-            System.out.println("Error al crear el archivo: " + e.getMessage());
+            System.out.println("\nError al crear el archivo: " + e.getMessage()+"\n");
         }
     }
 
@@ -53,11 +53,11 @@ public class FicheroAleatorio extends FicheroBase {
 
         // Verifica si el archivo no existe o está vacío
         if (!archivo.exists()) {
-            System.out.println("El archivo no se ha encontrado.");
+            System.out.println("\nEl archivo no se ha encontrado.\n");
             return jugadoresCargados; // Retorna lista vacía si no existe
         }
         if (archivo.length() == 0) {
-            System.out.println("El archivo está vacío.");
+            System.out.println("\nEl archivo está vacío.\n");
             return jugadoresCargados; // Retorna lista vacía si está vacío
         }
 
@@ -92,7 +92,7 @@ public class FicheroAleatorio extends FicheroBase {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error al cargar los jugadores: " + e.getMessage());
+            System.out.println("\nError al cargar los jugadores: " + e.getMessage()+"\n");
         }
 
         return jugadoresCargados; // Retorna la lista de jugadores cargados
@@ -122,7 +122,7 @@ public class FicheroAleatorio extends FicheroBase {
                 jugadoresGuardados.writeInt(jugador.getCoins());
             }
         } catch (IOException e) {
-            System.out.println("Error al guardar los jugadores: " + e.getMessage());
+            System.out.println("\nError al guardar los jugadores: " + e.getMessage()+"\n");
         }
     }
 }
