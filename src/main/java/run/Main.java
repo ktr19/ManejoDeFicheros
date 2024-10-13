@@ -137,7 +137,7 @@ public class Main {
         // Validación del Nick
         while (true) {
             System.out.print("Nick (o ingresa -1 para cancelar): ");
-            nick = scanner.nextLine();
+            nick = scanner.nextLine().trim();
             if (nick.equals("-1")) {
                 System.out.println("Operación de alta cancelada.");
                 return; // Cancelar la operación

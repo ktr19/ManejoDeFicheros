@@ -119,6 +119,16 @@ public abstract class FicheroBase implements JugadorDAO {
      */
     @Override
     public void modificarJugador(int id, Jugador jugadorModificado) {
+        // Verificar si el nuevo nick ya existe en otro jugador
+        for (Jugador jugadorExistente : jugadores) {
+            if (jugadorExistente.getNick().equalsIgnoreCase(jugadorModificado.getNick())
+                    && jugadorExistente.getId() != id) { // Comprobar que no sea el mismo jugador
+                System.out.println("[Error]: Ya existe un jugador con el nick '" + jugadorModificado.getNick() + "'");
+                return; // Salir si el nick ya está en uso
+            }
+        }
+
+        // Si no existe un conflicto de nick, proceder a modificar
         for (Jugador jugador : jugadores) {
             if (jugador.getId() == id) {
                 jugador.setNick(jugadorModificado.getNick());
@@ -126,13 +136,12 @@ public abstract class FicheroBase implements JugadorDAO {
                 jugador.setLifeLevel(jugadorModificado.getLifeLevel());
                 jugador.setCoins(jugadorModificado.getCoins());
                 System.out.println("");
-                System.out.println("Jugador modificado con exito");
+                System.out.println("Jugador modificado con éxito");
                 System.out.println("");
                 break;
             }
         }
         guardarJugadores();
-
     }
 
     /**
