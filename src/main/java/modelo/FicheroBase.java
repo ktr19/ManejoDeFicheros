@@ -131,7 +131,8 @@ public abstract class FicheroBase implements JugadorDAO {
         // Si no existe un conflicto de nick, proceder a modificar
         for (Jugador jugador : jugadores) {
             if (jugador.getId() == id) {
-                System.out.println(jugador.toString());
+                System.out.println("");
+                System.out.println("Antiguo --> " + jugador.toString());
                 jugador.setNick(jugadorModificado.getNick());
                 jugador.setExperience(jugadorModificado.getExperience());
                 jugador.setLifeLevel(jugadorModificado.getLifeLevel());
@@ -139,7 +140,7 @@ public abstract class FicheroBase implements JugadorDAO {
                 System.out.println("");
                 System.out.println("Jugador modificado con éxito");
                 System.out.println("");
-                System.out.println(jugador.toString());
+                System.out.println("Modificado --> "+jugador.toString());
                 break;
             }
         }
