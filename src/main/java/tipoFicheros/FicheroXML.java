@@ -13,28 +13,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Clase que maneja la lectura y escritura de jugadores en un archivo XML.
- * Extiende la clase {@link FicheroBase} para proporcionar funcionalidad específica
- * para archivos XML. 
- */
-public class FicheroXML extends FicheroBase {
+public class FicheroXML extends FicheroBase{ 
 
-    /**
-     * Constructor de la clase FicheroXML. 
-     * Inicializa la ruta del archivo XML de jugadores y crea el archivo si no existe,
-     * generando la estructura básica del XML si es necesario.
-     */
     public FicheroXML() {
         super("./Datos/jugadoresXML.xml");
         crearArchivoSiNoExiste();
     }
-
-    /**
-     * Crea el directorio y el archivo XML si no existen.
-     * Se asegura de que la estructura de directorios esté disponible y que el archivo XML
-     * tenga una estructura básica con un nodo raíz.
-     */
+    
     private void crearArchivoSiNoExiste() {
         try {
             // Crear el directorio Datos si no existe
@@ -73,12 +58,7 @@ public class FicheroXML extends FicheroBase {
         }
     }
 
-    /**
-     * Carga la lista de jugadores desde el archivo XML.
-     * Si el archivo no existe, devuelve una lista vacía.
-     *
-     * @return Una lista de objetos {@link Jugador} cargados desde el archivo XML.
-     */
+    
     @Override
     protected List<Jugador> cargarJugadores() {
         List<Jugador> jugadoresCargados = new ArrayList<>();
@@ -106,15 +86,11 @@ public class FicheroXML extends FicheroBase {
                 }
             }
         } catch (Exception e) {
-            System.out.println("{Error} No se encontró el archivo o hubo un error al cargar los jugadores.");
+            System.out.println("{Error}No se encontró el archivo o hubo un error al cargar los jugadores.");
         }
         return jugadoresCargados;
     }
 
-    /**
-     * Guarda la lista de jugadores en el archivo XML.
-     * Crea un nuevo documento XML y agrega cada jugador como un nodo dentro del nodo raíz.
-     */
     @Override
     protected void guardarJugadores() {
         try {
