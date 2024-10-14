@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ficheroConfi"},{"l":"modelo"},{"l":"run"},{"l":"tipoFicheros"}];updateSearchResults();

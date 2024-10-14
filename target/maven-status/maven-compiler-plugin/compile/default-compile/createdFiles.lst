@@ -1,0 +1,10 @@
+modelo\JugadorDAO.class
+tipoFicheros\FicheroTexto.class
+tipoFicheros\FicheroBinario.class
+tipoFicheros\FicheroXML.class
+tipoFicheros\FicheroAleatorio.class
+run\Main.class
+modelo\FicheroBase.class
+tipoFicheros\FicheroObjeto.class
+modelo\Jugador.class
+ficheroConfi\FicheroConfig.class
